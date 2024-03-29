@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ArticleRequest extends FormRequest
 {
@@ -22,8 +23,8 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|min:10|max:255',
-            'body' => 'required',
+            'title' => ['required', 'string', 'max:255', Rule::unique('articles')->ignore($this->article?->id)],
+            'content' => ['required', 'string'],
         ];
     }
 }

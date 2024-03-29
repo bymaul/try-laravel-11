@@ -23,7 +23,15 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        return view('articles.form', [
+            'article' => new article(),
+            'page_meta' => [
+                'title' => 'Create Article',
+                'method' => 'POST',
+                'action' => route('articles.store'),
+                'submit_button' => 'Create'
+            ],
+        ]);
     }
 
     /**
@@ -31,7 +39,7 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        $request->user()->articles()->create($request->all());
+        $request->user()->articles()->create($request->validated());
 
         return redirect()->route('articles.index');
     }
@@ -49,7 +57,15 @@ class ArticleController extends Controller
      */
     public function edit(article $article)
     {
-        return view('articles.edit', compact('article'));
+        return view('articles.form', [
+            'article' => $article,
+            'page_meta' => [
+                'title' => 'Edit Article: ' . $article->title,
+                'method' => 'PUT',
+                'action' => route('articles.update', $article),
+                'submit_button' => 'Update'
+            ],
+        ]);
     }
 
     /**
@@ -57,7 +73,7 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, article $article)
     {
-        $article->update($request->all());
+        $article->update($request->validated());
 
         return redirect()->route('articles.index');
     }
